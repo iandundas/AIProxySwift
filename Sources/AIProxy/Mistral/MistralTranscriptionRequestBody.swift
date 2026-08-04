@@ -44,6 +44,11 @@ nonisolated public struct MistralTranscriptionRequestBody: MultipartFormEncodabl
     /// Language of the audio, e.g. `en`. Providing the language can boost accuracy.
     public let language: String?
 
+    /// When true, the response's `language` field reports the language the model detected.
+    /// Without this flag the response's `language` is null on auto-detect requests (no
+    /// `language` supplied).
+    public let returnLanguage: Bool?
+
     /// Sampling temperature.
     public let temperature: Double?
 
@@ -66,6 +71,7 @@ nonisolated public struct MistralTranscriptionRequestBody: MultipartFormEncodabl
             self.fileURL.flatMap { .textField(name: "file_url", content: $0) },
             self.fileID.flatMap { .textField(name: "file_id", content: $0) },
             self.language.flatMap { .textField(name: "language", content: $0) },
+            self.returnLanguage.flatMap { .textField(name: "return_language", content: $0 ? "true" : "false") },
             self.temperature.flatMap { .textField(name: "temperature", content: String($0)) },
             self.diarize.flatMap { .textField(name: "diarize", content: $0 ? "true" : "false") },
             self.stream.flatMap { .textField(name: "stream", content: $0 ? "true" : "false") },
@@ -113,6 +119,7 @@ nonisolated public struct MistralTranscriptionRequestBody: MultipartFormEncodabl
         fileURL: String? = nil,
         fileID: String? = nil,
         language: String? = nil,
+        returnLanguage: Bool? = nil,
         temperature: Double? = nil,
         diarize: Bool? = nil,
         contextBias: [String]? = nil,
@@ -126,6 +133,7 @@ nonisolated public struct MistralTranscriptionRequestBody: MultipartFormEncodabl
         self.fileURL = fileURL
         self.fileID = fileID
         self.language = language
+        self.returnLanguage = returnLanguage
         self.temperature = temperature
         self.diarize = diarize
         self.contextBias = contextBias
